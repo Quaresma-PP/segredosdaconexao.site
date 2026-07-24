@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>Uma palavra para você 🤍</title>
+<link rel="icon" type="image/png" href="./assets/images/favicon.png" />
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100%;
+    background: #efeae2;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  }
+  .chat-wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 18px 14px 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hero {
+    background: #fff;
+    border-radius: 20px;
+    padding: 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    margin-bottom: 6px;
+  }
+  .hero img {
+    width: 100%;
+    max-height: 42vh;
+    object-fit: cover;
+    object-position: top;
+    display: block;
+    border-radius: 14px;
+    background: #f4efe6;
+  }
+
+  .group { display: flex; align-items: flex-end; gap: 8px; }
+  .avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    flex: 0 0 30px;
+    object-fit: cover;
+    object-position: top;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+
+  .bubbles { display: flex; flex-direction: column; gap: 6px; max-width: 82%; }
+  .bubble {
+    background: #ffffff;
+    color: #26313f;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.5;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    opacity: 0;
+    transform: translateY(6px);
+    animation: pop 320ms ease forwards;
+  }
+  .bubble b { color: #146b57; }
+  @keyframes pop {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .typing {
+    display: inline-flex;
+    gap: 4px;
+    background: #fff;
+    padding: 14px 16px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    width: fit-content;
+  }
+  .typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #b7c0c9;
+    animation: blink 1.1s infinite ease-in-out;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+
+  .choices {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: flex-end;
+    margin: 2px 0 4px;
+    opacity: 0; transform: translateY(6px);
+    animation: pop 320ms ease forwards;
+  }
+  .choice-btn {
+    background: #146b57;
+    color: #fff;
+    border: 0;
+    padding: 11px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(20,107,87,0.35);
+    transition: transform 120ms, opacity 150ms;
+  }
+  .choice-btn:hover { transform: translateY(-1px); }
+  .choice-btn:active { transform: translateY(0); }
+  .choices.done .choice-btn:not(.chosen) { display: none; }
+  .choices.done .choice-btn.chosen { cursor: default; opacity: 0.9; }
+
+  .input-row {
+    display: flex; flex-direction: column; gap: 8px;
+    align-items: flex-end;
+    opacity: 0; transform: translateY(6px);
+    animation: pop 320ms ease forwards;
+  }
+  .prayer-box {
+    width: 100%;
+    min-height: 96px;
+    background: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-size: 15px;
+    font-family: inherit;
+    color: #26313f;
+    resize: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    outline: none;
+  }
+  .prayer-box::placeholder { color: #9aa3ab; }
+  .send-btn {
+    background: #146b57;
+    color: #fff;
+    border: 0;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .redirect-note {
+    display: flex; align-items: center; gap: 10px;
+    justify-content: flex-start;
+    margin-top: 6px;
+    opacity: 0; transform: translateY(6px);
+    animation: pop 320ms ease forwards;
+    color: #6b7580;
+    font-size: 13px;
+    font-style: italic;
+  }
+  .redirect-note .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(20,107,87,0.25);
+    border-top-color: #146b57;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+  <!--
+    ⚠️ Copy "Desatadora dos Nós" atualizada (revisão mais recente do
+    documento). A versão anterior tinha "minha filha"/"meu filho" e
+    variação de gênero em "sozinho"/"pronto" — essa revisão removeu tudo
+    isso, então tirei também a lógica de gênero do código (não é mais
+    necessária). "MINHA RAINHA" continua fixo pros dois públicos: é o
+    visitante chamando Nossa Senhora de "minha rainha" (título dela), não
+    ela chamando o visitante. "Já pedi ao meu filho Jesus..." é sobre
+    Jesus, não sobre a pessoa no chat.
+
+    Placeholders / decisões em aberto, marcados com ⚠️ no código:
+    1. URL_DA_VSL: aponta pra "./live.html" — a página de live falsa
+       (estilo Facebook) que fica nesta mesma pasta, continuação deste
+       funil (index.html → chat.html → live.html).
+    2. Foto do topo: usando hero-desatadora.png (a mesma arte de
+       Nossa Senhora Desatadora dos Nós que você já tinha em
+       desatadora-nos/presell/des1.png).
+  -->
+
+  <div class="chat-wrap" id="chatWrap">
+    <div class="hero">
+      <img src="./assets/images/hero-desatadora.png" alt="Nossa Senhora Desatadora dos Nós" />
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var nome = (q.get('firstName') || '').trim();
+    if (!nome) nome = 'querida(o)';
+
+    // ⚠️ PLACEHOLDER: troque pela URL real da sua live/VSL/oferta.
+    var URL_DA_VSL = './live.html';
+
+    var AVATAR = './assets/images/hero-desatadora.png';
+
+    // A copy atual não usa mais termos de gênero pro visitante (nem
+    // "minha filha/meu filho" nem variação de "sozinho"/"pronto") — só
+    // substitui {{nome}} pelo {NAME}. "Já pedi ao meu filho Jesus..." é
+    // sobre Jesus (filho de Maria), não sobre a pessoa no chat.
+    function t(str) {
+      return str.replace(/\{\{nome\}\}/g, nome);
+    }
+
+    // Cada "step" roda em sequência.
+    // Tipos: 'bot' (grupo de balões), 'choices' (botões), 'input' (caixa de
+    // texto), 'redirect' (mostra as últimas falas e navega sozinho pra VSL).
+    var script = [
+      { type: 'bot', lines: ['Eu estava esperando por você', 'Tenho uma mensagem para você'] },
+      { type: 'choices', options: ['✅ EU QUERO TE OUVIR, MINHA RAINHA'] },
+
+      { type: 'bot', lines: ['Eu sei que neste momento as coisas estão muito difíceis na sua vida…', 'E você precisa de ajuda.', 'Certo?'] },
+      { type: 'choices', options: ['SIM! 🙏', 'EU PRECISO DE AJUDA AGORA ✅'] },
+
+      { type: 'bot', lines: ['Você não está sozinho, {{nome}}!', 'Estou aqui para te ajudar.', 'Hoje realizaremos um milagre que mudará toda a sua vida!', 'Você está pronto?'] },
+      { type: 'choices', options: ['ESTOU PRONTO! 🙏'] },
+
+      { type: 'bot', lines: ['Receba minhas bênçãos 🙏', 'Seu milagre divino está acontecendo agora mesmo, {{nome}}!', 'Feche os olhos, conecte-se com nosso amado Deus.', 'E responda:', 'Você tem fé?'] },
+      { type: 'choices', options: ['TENHO FÉ! 🙏', 'EU ACREDITO NOS MILAGRES DE DEUS ✅'] },
+
+      { type: 'bot', lines: ['Amém! ❤️', 'Louvado seja Deus!', 'Agora, {{nome}}...', 'desabafe sobre o que está te machucando. Diga o que te preocupa, o que te incomoda?', 'Abra seu coração e deixe fluir!', 'De que milagre você precisa?'] },
+      { type: 'input', placeholder: 'Escreva sua dor ou o milagre que você precisa…', button: 'Enviar' },
+
+      { type: 'bot', lines: [
+          'Ouvi sua prece, {{nome}}…',
+          'Feche os olhos agora, eu vou desatar todos os nós que sufocam sua vida.',
+          'Escute com atenção… pois estou prestes a liberar a bênção que você tanto pediu…',
+          'Já pedi ao meu filho jesus para liberar seu milagre…',
+          'Agora me diga, do fundo do seu coração…',
+          'Você aceita o milagre que tenho para você?'
+        ] },
+      { type: 'choices', options: ['SIM, ACEITO! 🙏'] },
+
+      { type: 'bot', lines: [
+          'Então me escutem bem, {{nome}}!',
+          'Com muito cuidado!!',
+          'Porque o próximo passo determinará todo o seu futuro e toda a sua vida.',
+          'Você me disse o que precisa.',
+          'E me pediu ajuda!',
+          'Ouvi sua oração e vim correndo para atender ao seu pedido!',
+          'Tudo que peço é um minuto do seu tempo!',
+          'Preparei uma transmissão ao vivo exclusiva para aqueles que chegaram até aqui! 🙏',
+          'Agora tudo o que você precisa fazer é assistir até o final e seu milagre acontecerá.',
+          'Esse é o canal que preparei para desatar os nós que te prendem!',
+          'Posso contar com a sua presença?'
+        ] },
+      { type: 'choices', options: ['SIM, ME ENVIE A TRANSMISSÃO AO VIVO!', 'EU VOU ASSISTIR'] },
+
+      { type: 'bot', lines: ['Então…', 'PRONTO! 🙏', 'Aceito seu pedido.', 'EU REALIZO SEU MILAGRE! ✨'] },
+      { type: 'redirect', label: 'Preparando sua transmissão ao vivo…' },
+    ];
+
+    var wrap = document.getElementById('chatWrap');
+    var i = 0;
+
+    function scrollDown() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    // Tempo fixo de "digitando" antes de CADA balão — igual pra todos,
+    // curto ou longo (sem variar por tamanho do texto).
+    function thinkTime(text) {
+      return 3200;
+    }
+
+    function showTypingIn(container, ms, cb) {
+      var typing = document.createElement('div');
+      typing.className = 'typing';
+      typing.innerHTML = '<span></span><span></span><span></span>';
+      container.appendChild(typing);
+      scrollDown();
+      setTimeout(function () {
+        typing.remove();
+        cb();
+      }, ms);
+    }
+
+    function renderBotGroup(lines, done) {
+      var group = document.createElement('div');
+      group.className = 'group';
+      var bubbles = document.createElement('div');
+      bubbles.className = 'bubbles';
+      group.innerHTML = '<img class="avatar" src="' + AVATAR + '" alt="">';
+      group.appendChild(bubbles);
+      wrap.appendChild(group);
+      scrollDown();
+
+      var idx = 0;
+      function next() {
+        if (idx >= lines.length) { done(); return; }
+        var line = t(lines[idx]);
+        showTypingIn(bubbles, thinkTime(line), function () {
+          var b = document.createElement('div');
+          b.className = 'bubble';
+          b.innerHTML = line.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+          bubbles.appendChild(b);
+          scrollDown();
+          idx++;
+          setTimeout(next, 900);
+        });
+      }
+      next();
+    }
+
+    function renderChoices(options, done) {
+      var box = document.createElement('div');
+      box.className = 'choices';
+      wrap.appendChild(box);
+      options.forEach(function (label) {
+        var btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = t(label);
+        btn.addEventListener('click', function () {
+          box.classList.add('done');
+          btn.classList.add('chosen');
+          done();
+        });
+        box.appendChild(btn);
+      });
+      scrollDown();
+    }
+
+    function renderInput(placeholder, buttonLabel, done) {
+      var row = document.createElement('div');
+      row.className = 'input-row';
+      row.innerHTML =
+        '<textarea class="prayer-box" placeholder="' + placeholder + '"></textarea>' +
+        '<button class="send-btn" disabled>' + buttonLabel + '</button>';
+      wrap.appendChild(row);
+      scrollDown();
+
+      var textarea = row.querySelector('textarea');
+      var btn = row.querySelector('button');
+      textarea.addEventListener('input', function () {
+        btn.disabled = textarea.value.trim().length === 0;
+      });
+      btn.addEventListener('click', function () {
+        var val = textarea.value.trim();
+        row.remove();
+        var group = document.createElement('div');
+        group.className = 'group';
+        group.style.justifyContent = 'flex-end';
+        group.innerHTML = '<div class="bubbles" style="align-items:flex-end;max-width:82%;"><div class="bubble" style="background:#146b57;color:#fff;">' + val.replace(/</g, '&lt;') + '</div></div>';
+        wrap.appendChild(group);
+        scrollDown();
+        done();
+      });
+    }
+
+    function renderRedirect(label, done) {
+      var row = document.createElement('div');
+      row.className = 'redirect-note';
+      row.innerHTML = '<div class="spinner"></div><span>' + label + '</span>';
+      wrap.appendChild(row);
+      scrollDown();
+      setTimeout(function () {
+        location.href = URL_DA_VSL;
+      }, 2200);
+    }
+
+    function runNext() {
+      if (i >= script.length) return;
+      var step = script[i];
+      i++;
+      if (step.type === 'bot') {
+        renderBotGroup(step.lines, runNext);
+      } else if (step.type === 'choices') {
+        renderChoices(step.options, runNext);
+      } else if (step.type === 'input') {
+        renderInput(step.placeholder, step.button, runNext);
+      } else if (step.type === 'redirect') {
+        renderRedirect(step.label, runNext);
+      }
+    }
+
+    runNext();
+  })();
+  </script>
+</body>
+</html>
