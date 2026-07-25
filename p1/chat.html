@@ -164,6 +164,39 @@
 </style>
 </head>
 <body>
+ <script>
+(function () {
+  // 1. Pega os params da URL atual
+  const urlParams = new URLSearchParams(window.location.search);
+
+  // 2. Recupera o que já estava guardado (de páginas anteriores)
+  const saved = JSON.parse(sessionStorage.getItem('trackParams') || '{}');
+
+  // 3. Junta tudo (URL atual tem prioridade), mas só o que interessa
+  const keep = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term',
+                'fbclid','gclid','firstName','variant','src','sck'];
+  const params = { ...saved };
+  urlParams.forEach((value, key) => { if (keep.includes(key)) params[key] = value; });
+
+  // 4. Salva pra próxima página
+  sessionStorage.setItem('trackParams', JSON.stringify(params));
+
+  // 5. Injeta em TODOS os links internos da página
+  const query = new URLSearchParams(params).toString();
+  document.querySelectorAll('a[href]').forEach(a => {
+    try {
+      const url = new URL(a.href, window.location.origin);
+      // só mexe em links do mesmo site (não estraga link externo)
+      if (url.hostname === window.location.hostname) {
+        const merged = new URLSearchParams(url.search);
+        new URLSearchParams(params).forEach((v, k) => merged.set(k, v));
+        url.search = merged.toString();
+        a.href = url.toString();
+      }
+    } catch (e) {}
+  });
+})();
+</script>
   <!--
     ⚠️ Copy "Desatadora dos Nós" atualizada (revisão mais recente do
     documento). A versão anterior tinha "minha filha"/"meu filho" e
