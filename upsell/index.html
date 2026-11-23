@@ -1,0 +1,435 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicativo de Monitoramento de WhatsApp</title>
+    <link rel="icon" type="image/png" href="images/124034.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        green: {
+                            light: '#DCF8C6',
+                            DEFAULT: '#25D366',
+                            dark: '#128C7E',
+                        }
+                    },
+                    fontSize: {
+                        'xl2': '1.35rem',
+                    },
+                    spacing: {
+                        '18': '4.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f8f8;
+        }
+
+        /* Animação da barra de progresso */
+        .progress-animation {
+            background: #25D366;
+            animation: progressLoad 2.5s forwards;
+        }
+
+        @keyframes progressLoad {
+            0% { width: 0%; }
+            100% { width: 99%; }
+        }
+
+        /* Efeito suave de destaque para o botão */
+        .button-pulse {
+            animation: buttonPulse 2s infinite;
+        }
+
+        @keyframes buttonPulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+    </style>
+
+
+
+
+
+<style>
+            @keyframes slideIn {
+                to { transform: translateX(0); }
+            }
+
+            @keyframes fadeOut {
+                to {
+                    opacity: 0;
+                    transform: translateX(120%);
+                }
+            }
+        </style></head>
+
+
+
+
+
+<body class="min-h-screen pt-5 md:pt-10">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+        <!-- Card principal -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+            <!-- Cabeçalho -->
+            <div class="bg-green-dark p-6 md:p-8 text-white text-center">
+                <div class="flex flex-col items-center gap-2">
+                    <div class="text-xl md:text-2xl font-bold mt-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Parabéns!!
+                    </div>
+                    <p class="text-green-light text-lg md:text-xl font-medium">Quase acessando o aplicativo de monitoramento</p>
+
+                    <!-- Selos de certificação -->
+                    <div class="mt-3 flex gap-3">
+                        <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm px-3 py-1 rounded-full flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                            </svg>
+                            <span class="text-xs font-medium">Verificado</span>
+                        </div>
+                        <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm px-3 py-1 rounded-full flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                            <span class="text-xs font-medium">Seguro</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo principal -->
+            <div class="p-6 md:p-8">
+                <!-- Barra de progresso -->
+                <div class="relative w-full h-7 bg-gray-100 rounded-full mb-8 overflow-hidden">
+                    <div class="h-full rounded-full progress-animation"></div>
+                    <div class="absolute inset-0 flex items-center justify-center text-base font-bold text-white">
+                        <span>99,9%</span>
+                    </div>
+                </div>
+
+                <!-- Informações e vaga disponível -->
+                <div class="flex items-start p-5 mb-8 bg-green-100 bg-opacity-50 rounded-xl border-l-4 border-green-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mt-0.5 text-green-500 flex-shrink-0 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    <div>
+                        <h3 class="font-semibold text-gray-800 mb-1">Sua vaga está garantida.</h3>
+                        <p class="text-gray-600">Acesso imediato após pagamento. Sem mensalidades ou cobranças recorrentes.</p>
+                    </div>
+                </div>
+
+                <!-- Contagem de vagas restantes -->
+                <div class="flex items-center justify-center mb-8">
+                    <div class="px-5 py-2 bg-red-50 text-red-800 rounded-lg font-medium text-sm flex items-center border border-red-100 button-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        Apenas <span id="spots" class="mx-1 font-bold text-red-900">3</span> vagas restantes
+                    </div>
+                </div>
+
+                <!-- Título da funcionalidade -->
+                <h2 class="text-xl2 font-bold text-center text-gray-800 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-1 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Rastreamento em Tempo Real
+                </h2>
+                <h3 class="text-center text-lg text-gray-700 mb-4">Veja a localização do seu parceiro em Apenas 2 Minutos!</h3>
+
+                <!-- Conteúdo informativo com fontes maiores -->
+                <div class="space-y-5 mb-8 text-gray-700 text-base md:text-lg">
+                    <p>Quer saber exatamente onde seu parceiro está em tempo real? Com nossa funcionalidade de rastreamento avançado, você pode obter a localização exata dele em apenas 2 minutinhos!</p>
+
+                    <p>Com atualizações precisas e em tempo real, você poderá monitorar os movimentos do seu parceiro a qualquer hora e em qualquer lugar. Seja para conferir se ele está realmente onde disse que estaria ou apenas para sua tranquilidade.</p>
+
+                    <p>Desbloqueie esse recurso poderoso e tenha o controle total sobre a situação. Em questão de minutos, você saberá exatamente onde ele está, sem que ele suspeite de nada.</p>
+                </div>
+
+                <!-- Preço e botão de ação mais claros e maiores -->
+                <div class="mb-8 text-center">
+                    <div class="inline-block bg-green-dark text-white text-3xl font-bold px-8 py-4 rounded-lg shadow-md mb-5 button-pulse">
+                        R$27,90
+                    </div>
+
+                    <a href="#" id="actionButton" class="block w-full bg-green-500 text-white text-center py-5 px-6 rounded-lg text-xl font-bold transition duration-300 shadow-md mb-5 button-pulse">
+                        FINALIZAR CADASTRO E ACESSAR
+                    </a>
+
+                    <p class="text-center text-gray-600 mt-2 text-base">
+                        Clique no botão verde acima para finalizar seu cadastro e acessar o aplicativo
+                    </p>
+
+                    <!-- Contador de tempo -->
+                    <div class="mt-6 mb-4 text-center">
+                        <p class="text-sm font-medium text-gray-600 mb-2">Oferta expira em:</p>
+                        <div class="flex justify-center space-x-2 text-lg font-bold">
+                            <div class="bg-gray-800 text-white w-12 h-12 flex items-center justify-center rounded">
+                                <span id="hours">00</span>
+                            </div>
+                            <span class="text-gray-800">:</span>
+                            <div class="bg-gray-800 text-white w-12 h-12 flex items-center justify-center rounded">
+                                <span id="minutes">15</span>
+                            </div>
+                            <span class="text-gray-800">:</span>
+                            <div class="bg-gray-800 text-white w-12 h-12 flex items-center justify-center rounded">
+                                <span id="seconds">00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Elementos de confiança mais ampliados -->
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="flex items-center bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <span class="font-medium text-gray-700">100% Seguro</span>
+                    </div>
+                    <div class="flex items-center bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="font-medium text-gray-700">Em Tempo Real</span>
+                    </div>
+                    <div class="flex items-center bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <span class="font-medium text-gray-700">Monitoramento Invisível</span>
+                    </div>
+                    <div class="flex items-center bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <span class="font-medium text-gray-700">Acesso Instantâneo</span>
+                    </div>
+                </div>
+
+                <!-- Dúvidas frequentes mais simples -->
+                <div class="border-t border-gray-200 pt-6 mt-6">
+                    <h2 class="text-lg font-bold text-center mb-5 text-gray-800">
+                        Dúvidas Frequentes
+                    </h2>
+
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div class="faq-question bg-gray-50 p-4 flex justify-between items-center cursor-pointer hover:bg-gray-100 text-lg">
+                            <span class="font-medium text-gray-800">Por que devo pagar isso?</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                        </div>
+                        <div class="faq-answer p-5 hidden border-t border-gray-200">
+                            <p class="text-gray-700 text-base md:text-lg">
+                                A taxa é necessária para manter nossos servidores funcionando e garantir a segurança dos seus dados. Isso cobre custos de infraestrutura, criptografia avançada e monitoramento 24/7, permitindo que o aplicativo funcione de forma invisível.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rodapé -->
+            <div class="bg-gray-50 p-5 border-t border-gray-200 text-center">
+                <p class="text-gray-500 text-sm">
+                    Ao utilizar este aplicativo, você concorda com nossos termos de serviço e política de privacidade.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container de notificações -->
+    <div class="fixed top-20 right-4 z-50 max-w-xs" id="notificationContainer"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Configuração do FAQ
+        const faqQuestions = document.querySelectorAll('.faq-question');
+
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('svg');
+
+                if (answer.classList.contains('hidden')) {
+                    answer.classList.remove('hidden');
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6" />';
+                } else {
+                    answer.classList.add('hidden');
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />';
+                }
+            });
+        });
+
+        // Contador regressivo
+        function updateCountdown() {
+            const hours = document.getElementById('hours');
+            const minutes = document.getElementById('minutes');
+            const seconds = document.getElementById('seconds');
+
+            let h = parseInt(hours.textContent);
+            let m = parseInt(minutes.textContent);
+            let s = parseInt(seconds.textContent);
+
+            s--;
+
+            if (s < 0) {
+                s = 59;
+                m--;
+                if (m < 0) {
+                    m = 59;
+                    h--;
+                    if (h < 0) {
+                        h = 0;
+                        m = 15;
+                        s = 0;
+                    }
+                }
+            }
+
+            hours.textContent = h.toString().padStart(2, '0');
+            minutes.textContent = m.toString().padStart(2, '0');
+            seconds.textContent = s.toString().padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+
+        // Vagas restantes (diminui aleatoriamente)
+        const spotsElement = document.getElementById('spots');
+        let spots = parseInt(spotsElement.textContent);
+
+        function updateSpots() {
+            if (spots > 1 && Math.random() < 0.3) {
+                spots--;
+                spotsElement.textContent = spots;
+
+                if (spots <= 1) {
+                    spotsElement.parentElement.classList.add('animate-pulse');
+                }
+            }
+        }
+
+        setInterval(updateSpots, 15000);
+
+        // Configurar redirecionamento com parâmetros da URL atual
+        const actionButton = document.getElementById('actionButton');
+        actionButton.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Obter parâmetros da URL atual
+            const currentParams = new URLSearchParams(window.location.search);
+            let targetUrl = 'https://checkout.perfectpay.com.br/pay/PPU38CPO902';
+
+            // Adicionar todos os parâmetros da URL atual para a URL de destino
+            for (const [key, value] of currentParams.entries()) {
+                if (!targetUrl.includes('?')) {
+                    targetUrl += '?';
+                } else if (!targetUrl.endsWith('?')) {
+                    targetUrl += '&';
+                }
+                targetUrl += `${key}=${value}`;
+            }
+
+            // Redirecionar para a URL de destino
+            window.location.href = targetUrl;
+        });
+
+        // Gerar notificações
+        const firstNames = [
+            "João", "Maria", "Pedro", "Ana", "Lucas", "Juliana", "Carlos", "Fernanda", 
+            "Ricardo", "Mariana", "José", "Camila", "Paulo", "Amanda", "Rodrigo", "Patrícia", 
+            "Marcos", "Aline", "Rafaela", "Bruno", "Gabriel", "Tatiana", "Leonardo", "Vanessa"
+        ];
+
+        const lastNames = [
+            "Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Alves", "Pereira", 
+            "Lima", "Gomes", "Costa", "Ribeiro", "Martins", "Carvalho", "Almeida", "Lopes"
+        ];
+
+        function getRandomName() {
+            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            return `${firstName} ${lastName}`;
+        }
+
+        function showNotification() {
+            const name1 = getRandomName();
+            const name2 = getRandomName();
+
+            const notificationContainer = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = 'notification bg-white border-l-4 border-green-500 p-4 mb-3 rounded-lg shadow-lg flex items-center text-sm';
+            notification.style.transform = 'translateX(120%)';
+            notification.style.animation = 'slideIn 0.5s forwards, fadeOut 0.5s forwards 4.5s';
+
+            notification.innerHTML = `
+                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="text-gray-700"><strong>${name1}</strong> monitorou <strong>${name2}</strong></span>
+                    <div class="text-xs text-gray-500 mt-1">há ${Math.floor(Math.random() * 10) + 1} minutos</div>
+                </div>
+            `;
+
+            notificationContainer.appendChild(notification);
+
+            // Remover notificação após animação e agendar próxima após 5 segundos
+            setTimeout(() => {
+                notification.remove();
+                // Agendar próxima notificação após 5 segundos do desaparecimento desta
+                setTimeout(showNotification, 5000);
+            }, 5000);
+        }
+
+        // CSS para animações de notificação
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                to { transform: translateX(0); }
+            }
+
+            @keyframes fadeOut {
+                to {
+                    opacity: 0;
+                    transform: translateX(120%);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Mostrar primeira notificação após 2 segundos
+        setTimeout(showNotification, 2000);
+    });
+    </script>
+
+
+
+<script>
+  (function() {
+    history.pushState(null, null, location.href);
+    window.addEventListener('popstate', function() {
+      window.location.replace("https://checkout.perfectpay.com.br/pay/PPU38CPO91U?ref=PPA21ZCB");
+    });
+  })();
+</script>
+
+</body></html>
